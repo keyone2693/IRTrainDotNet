@@ -12,7 +12,7 @@ namespace IrFadakTrainDotNet.Models
         public int SaleId { get; set; }
         public Dictionary<TarrifCodes, int> Prices { get; set; }
         public List<GetOptionalServicesResult> OptionalServices { get; set; }
-        public List<PriceInOtherCurrency> PricesInOtherCurrencies { get; set; }
+       // public List<PriceInOtherCurrency> PricesInOtherCurrencies { get; set; }
 
     }
 }
