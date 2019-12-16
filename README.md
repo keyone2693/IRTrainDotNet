@@ -65,7 +65,7 @@ You can use these methods both Async and nonAsync :)
 ***
 # Wiki (In Persian sorry other languages 😁)
 
-[Persian Documentation Download](https://github.com/keyone2693/IRTrainDotNet/blob/master/Docs/Documentation-v1.9.3.pdf)
+[Download Persian Documentation](https://github.com/keyone2693/IRTrainDotNet/blob/master/Docs/Documentation-v1.9.3.pdf)
 
 # License
 
