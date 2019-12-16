@@ -13,7 +13,8 @@ also its possible to just use one of these services(Fadak-Raja-Safir)
 
 [![Build status](https://img.shields.io/appveyor/ci/keyone2693/IRTrainDotNet.svg)](https://ci.appveyor.com/project/keyone2693/irtraindotnet)
 [![NuGet](https://img.shields.io/nuget/v/IRTrainDotNet.svg)](https://www.nuget.org/packages/IRTrainDotNet/)
-https://img.shields.io/github/issues/keyone2693/IRTrainDotNet
+[![GitHub issues](https://img.shields.io/github/issues/keyone2693/persian-time-ago-pipe.svg?maxAge=25920?style=plastic)](https://github.com/keyone2693/IRTrainDotNet/issues)
+[![npm](https://img.shields.io/npm/l/persian-time-ago-pipe.svg?maxAge=25920?style=plastic)](https://github.com/keyone2693/IRTrainDotNet/blob/master/LICENSE)
 
 #### Current version: 1.9.x [Stable]
 
