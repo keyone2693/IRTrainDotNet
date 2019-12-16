@@ -4,6 +4,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>IRTrainDotNet</AssemblyName>
     <RootNamespace>IRTrainDotNet</RootNamespace>
+    <ApplicationIcon>Untitled-2.ico</ApplicationIcon>
+    <Version>1.9.3</Version>
+    <AssemblyVersion>1.9.3.0</AssemblyVersion>
+    <Description>Dotnet (.netFreamwork  .netCore) package for Iran railway-trains online-ticket services</Description>
   </PropertyGroup>
 
   <ItemGroup>
