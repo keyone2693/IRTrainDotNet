@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IrFadakTrainDotNet\IrFadakTrainDotNet.csproj" />
+    <ProjectReference Include="..\IrTrainDotNet\IrTrainDotNet.csproj" />
   </ItemGroup>
  
 
