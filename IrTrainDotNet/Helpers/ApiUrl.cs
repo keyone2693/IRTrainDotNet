@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace IrTrainDotNet.Helpers
+namespace IRTrainDotNet.Helpers
 {
     public static class ApiUrl
     {
-        public const string FadakBaseUrl = "https://api.IrTrains.com/rpTicketing";
+        public const string FadakBaseUrl = "https://api.fadaktrains.com/rpTicketing";
         //Raja Still Under Dev
         public const string RajaBaseUrl = "https://hostservice.raja.ir/Api/WebSiteService";
         //Safir Completely Under Dev

@@ -1,5 +1,5 @@
-﻿using IrTrainDotNet.Helpers;
-using IrTrainDotNet.Models;
+﻿using IRTrainDotNet.Helpers;
+using IRTrainDotNet.Models;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -10,13 +10,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace IrTrainDotNet
+namespace IRTrainDotNet
 {
-    public class IrTrainApi : IIrTrainApi
+    public class IRTrainApi : IIRTrainApi
     {
         #region ctor
         private readonly CancellationTokenSource _cancellationTokenSource;
-        public IrTrainApi()
+        public IRTrainApi()
         {
             _cancellationTokenSource = new CancellationTokenSource();
         }
@@ -54,7 +54,7 @@ namespace IrTrainDotNet
 
             return result;
         }
-        public bool ValidateTokenWithTime(DateTime addDate, Company company)
+        public bool ValidateTokenWithTime(DateTime addDate)
         {
             if (addDate.AddMinutes(20) > DateTime.Now)
             {
@@ -69,7 +69,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.GetLastVersion.ToUri());
+            var _client = new RestClient(path + ApiUrl.GetLastVersion);
             var _request = new RestRequest(Method.GET);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + token);
@@ -89,7 +89,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.Stations.ToUri());
+            var _client = new RestClient(path + ApiUrl.Stations);
             var _request = new RestRequest(Method.GET);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -174,7 +174,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.GetLastVersion.ToUri());
+            var _client = new RestClient(path + ApiUrl.GetLastVersion);
             var _request = new RestRequest(Method.GET);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -216,7 +216,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.GetWagonAvailableSeatCount.ToUri());
+            var _client = new RestClient(path + ApiUrl.GetWagonAvailableSeatCount);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -256,7 +256,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.LockSeat.ToUri());
+            var _client = new RestClient(path + ApiUrl.LockSeat);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -296,7 +296,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.LockSeatBulk.ToUri());
+            var _client = new RestClient(path + ApiUrl.LockSeatBulk);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -336,7 +336,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.UnlockSeat.ToUri());
+            var _client = new RestClient(path + ApiUrl.UnlockSeat);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -378,7 +378,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.SaveTicketsInfo.ToUri());
+            var _client = new RestClient(path + ApiUrl.SaveTicketsInfo);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -418,7 +418,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.RegisterTickets.ToUri());
+            var _client = new RestClient(path + ApiUrl.RegisterTickets);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -458,7 +458,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.TicketReportA.ToUri());
+            var _client = new RestClient(path + ApiUrl.TicketReportA);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -498,7 +498,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.RefundTicketInfo.ToUri());
+            var _client = new RestClient(path + ApiUrl.RefundTicketInfo);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -538,7 +538,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.RefundTicket.ToUri());
+            var _client = new RestClient(path + ApiUrl.RefundTicket);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -581,7 +581,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.UserSales.ToUri());
+            var _client = new RestClient(path + ApiUrl.UserSales);
             var _request = new RestRequest(Method.GET);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -621,7 +621,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.AgentCredit.ToUri());
+            var _client = new RestClient(path + ApiUrl.AgentCredit);
             var _request = new RestRequest(Method.GET);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -668,7 +668,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.Login.ToUri());
+            var _client = new RestClient((path + ApiUrl.Login).ToUri());
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddJsonBody(loginModel);
@@ -699,7 +699,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.GetLastVersion.ToUri());
+            var _client = new RestClient(path + ApiUrl.GetLastVersion);
             var _request = new RestRequest(Method.GET);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + token);
@@ -718,7 +718,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.Stations.ToUri());
+            var _client = new RestClient(path + ApiUrl.Stations);
             var _request = new RestRequest(Method.GET);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -804,7 +804,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.GetLastVersion.ToUri());
+            var _client = new RestClient(path + ApiUrl.GetLastVersion);
             var _request = new RestRequest(Method.GET);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -847,7 +847,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.GetWagonAvailableSeatCount.ToUri());
+            var _client = new RestClient(path + ApiUrl.GetWagonAvailableSeatCount);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -889,7 +889,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.LockSeat.ToUri());
+            var _client = new RestClient(path + ApiUrl.LockSeat);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -929,7 +929,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.LockSeatBulk.ToUri());
+            var _client = new RestClient(path + ApiUrl.LockSeatBulk);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -969,7 +969,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.UnlockSeat.ToUri());
+            var _client = new RestClient(path + ApiUrl.UnlockSeat);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -1011,7 +1011,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.SaveTicketsInfo.ToUri());
+            var _client = new RestClient(path + ApiUrl.SaveTicketsInfo);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -1051,7 +1051,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.RegisterTickets.ToUri());
+            var _client = new RestClient(path + ApiUrl.RegisterTickets);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -1091,7 +1091,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.TicketReportA.ToUri());
+            var _client = new RestClient(path + ApiUrl.TicketReportA);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -1131,7 +1131,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.RefundTicketInfo.ToUri());
+            var _client = new RestClient(path + ApiUrl.RefundTicketInfo);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -1171,7 +1171,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.RefundTicket.ToUri());
+            var _client = new RestClient(path + ApiUrl.RefundTicket);
             var _request = new RestRequest(Method.POST);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -1214,7 +1214,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.UserSales.ToUri());
+            var _client = new RestClient(path + ApiUrl.UserSales);
             var _request = new RestRequest(Method.GET);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
@@ -1254,7 +1254,7 @@ namespace IrTrainDotNet
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
-            var _client = new RestClient(path + ApiUrl.AgentCredit.ToUri());
+            var _client = new RestClient(path + ApiUrl.AgentCredit);
             var _request = new RestRequest(Method.GET);
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);

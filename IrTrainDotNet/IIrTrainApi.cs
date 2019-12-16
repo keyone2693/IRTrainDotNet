@@ -1,19 +1,19 @@
-﻿using IrTrainDotNet.Helpers;
-using IrTrainDotNet.Models;
+﻿using IRTrainDotNet.Helpers;
+using IRTrainDotNet.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IrTrainDotNet
+namespace IRTrainDotNet
 {
-    public interface IIrTrainApi
+    public interface IIRTrainApi
     {
         #region Synchronous
         //-------------------------------------------
         #region Auth
         ServiceResult<string> Login(LoginModel loginModel, Company company);
-        bool ValidateTokenWithTime(DateTime addDate, Company company);
+        bool ValidateTokenWithTime(DateTime addDate);
         bool ValidateTokenWithRequest(string token, Company company);
         #endregion
         #region Stations

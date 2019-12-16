@@ -1,9 +1,9 @@
-﻿using IrTrainDotNet.Helpers;
+﻿using IRTrainDotNet.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace IrTrainDotNet.Models
+namespace IRTrainDotNet.Models
 {
    public class LockSeatBulkResult
     {

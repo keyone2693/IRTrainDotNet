@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IrTrainDotNet;
+using IRTrainDotNet;
 using MadPay724.Data.DatabaseContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,7 +31,7 @@ namespace TestExample
 
             services.AddControllers();
 
-            services.AddScoped<IIrTrainApi, IrTrainApi>();
+            services.AddScoped<IIRTrainApi, IRTrainApi>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

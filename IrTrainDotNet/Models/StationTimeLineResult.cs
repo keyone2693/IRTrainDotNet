@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace IrTrainDotNet.Models
+namespace IRTrainDotNet.Models
 {
     public class StationTimeLineResult
     {

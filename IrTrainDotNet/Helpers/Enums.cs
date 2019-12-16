@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace IrTrainDotNet.Helpers
+namespace IRTrainDotNet.Helpers
 {
     public enum TarrifCodes
     {

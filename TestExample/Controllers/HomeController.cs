@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IrTrainDotNet;
-using IrTrainDotNet.Helpers;
-using IrTrainDotNet.Models;
+using IRTrainDotNet;
+using IRTrainDotNet.Helpers;
+using IRTrainDotNet.Models;
 using MadPay724.Data.DatabaseContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,14 +16,13 @@ namespace TestExample.Controllers
     public class HomeController : ControllerBase
     {
 
-        private readonly IIrTrainApi _fadakTrainApi;
+        private readonly IIRTrainApi _fadakTrainApi;
         private readonly MainDbContext _db;
-        public HomeController(IIrTrainApi fadakTrainApi, MainDbContext db)
+        public HomeController(IIRTrainApi fadakTrainApi, MainDbContext db)
         {
             _fadakTrainApi = fadakTrainApi;
             _db = db;
         }
-
         [HttpGet("api/home/login")]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {

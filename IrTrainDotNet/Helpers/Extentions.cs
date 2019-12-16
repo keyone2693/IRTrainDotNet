@@ -1,9 +1,9 @@
-﻿using IrTrainDotNet.Models;
+﻿using IRTrainDotNet.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace IrTrainDotNet.Helpers
+namespace IRTrainDotNet.Helpers
 {
     public static class Extentions
     {
