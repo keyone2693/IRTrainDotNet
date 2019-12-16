@@ -6,7 +6,7 @@ namespace IRTrainDotNet.Models
 {
   public  class LoginModel
     {
-        public string Username { get; set; } = "Username";
-        public string Password { get; set; } = "Password";
+        public string Username { get; set; };
+        public string Password { get; set; };
     }
 }
