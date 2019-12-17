@@ -1,8 +1,6 @@
 # IRTrainWebService
 
-Iran Railway-Trains Service Package
-
-Webservice package for iran Railway-Trains api on Raja-Fadak-Safir website
+Iran Railway-Trains all in one package for DotNet (Api-WebService)
 
 ## Development 
 
