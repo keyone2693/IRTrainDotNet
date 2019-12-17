@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <Version>1.9.5</Version>
+    <Authors>Keyvan Abdollahzadeh</Authors>
+    <Description>Iran Railway-Trains services Api-WebService for dotnet</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/keyone2693/IRTrainDotNet</PackageProjectUrl>
+    <PackageIcon>angular-4.jpg</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/keyone2693/IRTrainDotNet</RepositoryUrl>
+    <RepositoryType>Public</RepositoryType>
+    <PackageReleaseNotes>In this version:
+you have the "Fadak" service completely good to go
+and you can use it if you had the username-password
+
+The "Raja" system under development
+the only thing still not working is two or three methods of Raja system, that's it !!!
+
+and the "Safir" system I am working on it
+not implemented yet :(
+</PackageReleaseNotes>
+    <PackageTags>Iran,Train,Ticket</PackageTags>
+    <NeutralLanguage></NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\angular-4.jpg">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="RestSharp" Version="106.6.10" />
+  </ItemGroup>
+
+</Project>

@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{5B9B8AB0-B
 		C:\Users\Key1-lab\Desktop\Documentation-v1.9.3.pdf = C:\Users\Key1-lab\Desktop\Documentation-v1.9.3.pdf
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IRTrainDotNet", "IRTrainDotNet\IRTrainDotNet.csproj", "{B393E643-5D47-4C37-B4BB-9C9757ED5109}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{1C83BCD1-BDD1-419E-A949-F6D1ECE8940F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C83BCD1-BDD1-419E-A949-F6D1ECE8940F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C83BCD1-BDD1-419E-A949-F6D1ECE8940F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B393E643-5D47-4C37-B4BB-9C9757ED5109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B393E643-5D47-4C37-B4BB-9C9757ED5109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B393E643-5D47-4C37-B4BB-9C9757ED5109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B393E643-5D47-4C37-B4BB-9C9757ED5109}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
