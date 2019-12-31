@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace IRTrainDotNet.Models
 {
- public   class TicketReportAResult
+    public class TicketReportAResult
     {
         public string CompanyName { get; set; }
         public string StartStationName { get; set; }

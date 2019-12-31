@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace IRTrainDotNet.Models
 {
@@ -13,7 +11,7 @@ namespace IRTrainDotNet.Models
         public string EnterTimeF { get; set; }
         public DateTime ExitTime { get; set; }
         public int DayAfter { get; set; }
-        public int row { get; set; }
+        public int Row { get; set; }
         public DateTime ExitTimeProgram { get; set; }
         public string Width { get; set; }
     }

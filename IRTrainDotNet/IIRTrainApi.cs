@@ -2,7 +2,6 @@
 using IRTrainDotNet.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace IRTrainDotNet
@@ -17,7 +16,7 @@ namespace IRTrainDotNet
         bool ValidateTokenWithRequest(string token, Company company);
         #endregion
         #region Stations
-        ServiceResult<List<Station>> GetStations(string authToken, Company company);
+        ServiceResult<IEnumerable<Station>> GetStations(string authToken, Company company);
         ServiceResult<Station> GetStationById(string authToken, int stationId, Company company);
         #endregion
         #region Raja
@@ -39,7 +38,7 @@ namespace IRTrainDotNet
         ServiceResult<int> RefundTicket(string authToken, RefundTicketParams refundTicketParams, Company company);
         #endregion
         #region Agent
-        ServiceResult<List<UserSaleMetadata>> UserSales(string authToken, Company company);
+        ServiceResult<IEnumerable<UserSaleMetadata>> UserSales(string authToken, Company company);
         ServiceResult<long> AgentCredit(string authToken, Company company);
         #endregion
         //-------------------------------------------
@@ -52,7 +51,7 @@ namespace IRTrainDotNet
         Task<bool> ValidateTokenWithRequestAsync(string token, Company company);
         #endregion
         #region Stations
-        Task<ServiceResult<List<Station>>> GetStationsAsync(string authToken, Company company);
+        Task<ServiceResult<IEnumerable<Station>>> GetStationsAsync(string authToken, Company company);
         Task<ServiceResult<Station>> GetStationByIdAsync(string authToken, int stationId, Company company);
         #endregion
         #region Raja
@@ -75,7 +74,7 @@ namespace IRTrainDotNet
 
         #endregion
         #region Agent
-        Task<ServiceResult<List<UserSaleMetadata>>> UserSalesAsync(string authToken, Company company);
+        Task<ServiceResult<IEnumerable<UserSaleMetadata>>> UserSalesAsync(string authToken, Company company);
         Task<ServiceResult<long>> AgentCreditAsync(string authToken, Company company);
         #endregion
         //-------------------------------------------

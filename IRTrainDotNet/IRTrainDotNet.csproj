@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <Version>1.9.5</Version>
+    <Version>1.9.6</Version>
     <Authors>Keyvan Abdollahzadeh</Authors>
     <Description>Iran Railway-Trains services Api-WebService for dotnet</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -12,15 +12,7 @@
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/keyone2693/IRTrainDotNet</RepositoryUrl>
     <RepositoryType>Public</RepositoryType>
-    <PackageReleaseNotes>In this version:
-you have the "Fadak" service completely good to go
-and you can use it if you had the username-password
-
-The "Raja" system under development
-the only thing still not working is two or three methods of Raja system, that's it !!!
-
-and the "Safir" system I am working on it
-not implemented yet :(
+    <PackageReleaseNotes>bugs fix
 </PackageReleaseNotes>
     <PackageTags>Iran,Train,Ticket</PackageTags>
     <NeutralLanguage></NeutralLanguage>

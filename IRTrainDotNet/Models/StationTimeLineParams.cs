@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace IRTrainDotNet.Models
 {
@@ -8,7 +6,7 @@ namespace IRTrainDotNet.Models
     {
         public int CircularPeriod { get; set; }
         public int CircularNumberSerial { get; set; }
-        public int pTrainNumber { get; set; }
+        public int TrainNumber { get; set; }
         public DateTime MoveDate { get; set; }
     }
 

@@ -85,7 +85,7 @@ namespace IRTrainDotNet
         }
         #endregion
         #region Stations
-        public ServiceResult<List<Station>> GetStations(string authToken, Company company)
+        public ServiceResult<IEnumerable<Station>> GetStations(string authToken, Company company)
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
@@ -94,10 +94,10 @@ namespace IRTrainDotNet
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
 
-            var result = new ServiceResult<List<Station>>();
+            var result = new ServiceResult<IEnumerable<Station>>();
 
             var response = _client.Execute(_request);
-            var res = JsonConvert.DeserializeObject<IrTrainResult<List<Station>>>(response.Content);
+            var res = JsonConvert.DeserializeObject<IrTrainResult<IEnumerable<Station>>>(response.Content);
 
             if (response.IsSuccessful && response.StatusCode == HttpStatusCode.OK)
             {
@@ -577,7 +577,7 @@ namespace IRTrainDotNet
 
         #endregion
         #region Agent
-        public ServiceResult<List<UserSaleMetadata>> UserSales(string authToken, Company company)
+        public ServiceResult<IEnumerable<UserSaleMetadata>> UserSales(string authToken, Company company)
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
@@ -586,10 +586,10 @@ namespace IRTrainDotNet
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
 
-            var result = new ServiceResult<List<UserSaleMetadata>>();
+            var result = new ServiceResult<IEnumerable<UserSaleMetadata>>();
 
             var response = _client.Execute(_request);
-            var res = JsonConvert.DeserializeObject<IrTrainResult<List<UserSaleMetadata>>>(response.Content);
+            var res = JsonConvert.DeserializeObject<IrTrainResult<IEnumerable<UserSaleMetadata>>>(response.Content);
 
             if (response.IsSuccessful && response.StatusCode == HttpStatusCode.OK)
             {
@@ -714,7 +714,7 @@ namespace IRTrainDotNet
         }
         #endregion
         #region Stations
-        public async Task<ServiceResult<List<Station>>> GetStationsAsync(string authToken, Company company)
+        public async Task<ServiceResult<IEnumerable<Station>>> GetStationsAsync(string authToken, Company company)
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
@@ -723,11 +723,11 @@ namespace IRTrainDotNet
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
 
-            var result = new ServiceResult<List<Station>>();
+            var result = new ServiceResult<IEnumerable<Station>>();
 
             var response = await _client.ExecuteTaskAsync(_request, _cancellationTokenSource.Token);
 
-            var res = JsonConvert.DeserializeObject<IrTrainResult<List<Station>>>(response.Content);
+            var res = JsonConvert.DeserializeObject<IrTrainResult<IEnumerable<Station>>>(response.Content);
 
             if (response.IsSuccessful && response.StatusCode == HttpStatusCode.OK)
             {
@@ -1210,7 +1210,7 @@ namespace IRTrainDotNet
 
         #endregion
         #region Agent
-        public async Task<ServiceResult<List<UserSaleMetadata>>> UserSalesAsync(string authToken, Company company)
+        public async Task<ServiceResult<IEnumerable<UserSaleMetadata>>> UserSalesAsync(string authToken, Company company)
         {
             var path = company == Company.Raja ? ApiUrl.RajaBaseUrl : company == Company.Fadak ? ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
 
@@ -1219,10 +1219,10 @@ namespace IRTrainDotNet
             _request.AddHeader("Content-Type", "application/json");
             _request.AddHeader("Authorization", Constants.PreToken + authToken);
 
-            var result = new ServiceResult<List<UserSaleMetadata>>();
+            var result = new ServiceResult<IEnumerable<UserSaleMetadata>>();
 
             var response = await _client.ExecuteTaskAsync(_request, _cancellationTokenSource.Token);
-            var res = JsonConvert.DeserializeObject<IrTrainResult<List<UserSaleMetadata>>>(response.Content);
+            var res = JsonConvert.DeserializeObject<IrTrainResult<IEnumerable<UserSaleMetadata>>>(response.Content);
 
             if (response.IsSuccessful && response.StatusCode == HttpStatusCode.OK)
             {

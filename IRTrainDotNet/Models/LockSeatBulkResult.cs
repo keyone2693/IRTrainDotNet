@@ -1,7 +1,5 @@
 ﻿using IRTrainDotNet.Helpers;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace IRTrainDotNet.Models
 {
@@ -12,8 +10,8 @@ namespace IRTrainDotNet.Models
         public string CompartmentNumbers { get; set; }
         public int SaleId { get; set; }
         public Dictionary<TarrifCodes, int> Prices { get; set; }
-        public List<GetOptionalServicesResult> OptionalServices { get; set; }
-        public List<PriceInOtherCurrency> PricesInOtherCurrencies { get; set; }
+        public IEnumerable<GetOptionalServicesResult> OptionalServices { get; set; }
+        public IEnumerable<PriceInOtherCurrency> PricesInOtherCurrencies { get; set; }
 
     }
 }
