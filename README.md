@@ -15,7 +15,7 @@ also its possible to just use one of these services(Fadak-Raja-Safir) :)
 [![GitHub stars](https://img.shields.io/github/stars/keyone2693/IRTrainDotNet.svg?maxAge=25920?style=plastic)](https://github.com/keyone2693/IRTrainDotNet/stargazers)
 [![GitHub license](https://img.shields.io/github/license/keyone2693/IRTrainDotNet.svg?maxAge=25920?style=plastic)](https://github.com/keyone2693/IRTrainDotNet/blob/master/LICENSE)
 
-#### Current version: 1.9.x [Stable]
+#### Current version: 2.0.x [Stable]
 In this version:
 you have the "Fadak" service completely good to go [Stable]
 and you can use it if you had the username-password
