@@ -1,12 +1,10 @@
 ﻿using Flurl.Http;
 using IRTrainDotNet.Helpers;
 using IRTrainDotNet.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace IRTrainDotNet
@@ -14,7 +12,6 @@ namespace IRTrainDotNet
     public class IRTrainApi : IIRTrainApi
     {
         private string error = "";
-        private readonly HttpClient _http;
 
         #region ctor
         #endregion

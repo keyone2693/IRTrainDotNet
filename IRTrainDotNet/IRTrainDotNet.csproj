@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <Version>2.1.0</Version>
+    <Version>2.1.6</Version>
     <Authors>Keyvan Abdollahzadeh</Authors>
     <Description>Iran Railway-Trains (Raja-Fadak-Safir) all in one package for DotNet (Api-WebService)</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
