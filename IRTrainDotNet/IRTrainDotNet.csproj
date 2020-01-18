@@ -3,23 +3,25 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <Version>1.9.6</Version>
+    <Version>2.0.0</Version>
     <Authors>Keyvan Abdollahzadeh</Authors>
-    <Description>Iran Railway-Trains services Api-WebService for dotnet</Description>
+    <Description>Iran Railway-Trains (Raja-Fadak-Safir) all in one package for DotNet (Api-WebService)</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/keyone2693/IRTrainDotNet</PackageProjectUrl>
-    <PackageIcon>angular-4.jpg</PackageIcon>
+    <PackageIcon>IrTrain.jpg</PackageIcon>
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/keyone2693/IRTrainDotNet</RepositoryUrl>
     <RepositoryType>Public</RepositoryType>
-    <PackageReleaseNotes>bugs fix
-</PackageReleaseNotes>
+    <PackageReleaseNotes>-RestSharp removed And
+-Its base on Httpclient now
+
+* minor bug fixes</PackageReleaseNotes>
     <PackageTags>Iran,Train,Ticket</PackageTags>
     <NeutralLanguage></NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\angular-4.jpg">
+    <None Include="..\..\Files\IrTrain.jpg">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
@@ -30,8 +32,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="RestSharp" Version="106.6.10" />
   </ItemGroup>
 
 </Project>

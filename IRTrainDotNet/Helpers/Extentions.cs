@@ -81,5 +81,53 @@ namespace IRTrainDotNet.Helpers
             }
 
         }
+
+        public static string ToWagonTypeName(this bool isCompartment, int compartmentCapicity)
+        {
+            if (isCompartment)
+            {
+                if(compartmentCapicity == 4)
+                {
+                    return "کوپه ای 4 نفره";
+                }
+                else if(compartmentCapicity == 6)
+                {
+                    return "کوپه ای 6 نفره";
+                }
+            }
+            else
+            {
+                return "سالنی 4 ردیفه";
+            }
+            return "نامشخص";
+        }
+        public static WagonType ToWagonType(this bool isCompartment, int compartmentCapicity)
+        {
+            if (isCompartment)
+            {
+                if (compartmentCapicity == 4)
+                {
+                    return WagonType.CompartmentFour;
+                }
+                else if (compartmentCapicity == 6)
+                {
+                    return WagonType.CompartmentSix;
+                }
+            }
+            else
+            {
+                return WagonType.SalonFour;
+            }
+            return WagonType.None;
+        }
+
+        public static string ToBaseUrl(this Company company)
+        {
+            return  company == Company.Raja ? 
+                ApiUrl.RajaBaseUrl :
+                company == Company.Fadak ?
+                ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
+        }
+
     }
 }

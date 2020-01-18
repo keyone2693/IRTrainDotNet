@@ -28,6 +28,20 @@ namespace IRTrainDotNet.Helpers
     {
         Raja = 1,
         Fadak = 2, 
-        Safir = 3
+        Safir = 3,
+        BonRail = 4,
+        NoorReza = 5,
+        Joopar = 6,
+        TarabarSaba = 7,
+        ParsLarim = 8,
+        Mahtab = 9,
+        Home = 9,
+    }
+    public enum WagonType
+    {
+        None = 0,
+        CompartmentFour = 1,
+        CompartmentSix = 2,
+        SalonFour = 3
     }
 }
