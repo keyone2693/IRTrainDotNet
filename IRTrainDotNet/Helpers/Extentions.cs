@@ -86,11 +86,11 @@ namespace IRTrainDotNet.Helpers
         {
             if (isCompartment)
             {
-                if(compartmentCapicity == 4)
+                if (compartmentCapicity == 4)
                 {
                     return "کوپه ای 4 نفره";
                 }
-                else if(compartmentCapicity == 6)
+                else if (compartmentCapicity == 6)
                 {
                     return "کوپه ای 6 نفره";
                 }
@@ -121,12 +121,12 @@ namespace IRTrainDotNet.Helpers
             return WagonType.None;
         }
 
-        public static string ToBaseUrl(this Company company)
+        public static string ToBaseUrl(this Company company, string url = "")
         {
-            return  company == Company.Raja ? 
+            return company == Company.Raja ?
                 ApiUrl.RajaBaseUrl :
                 company == Company.Fadak ?
-                ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl;
+                ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl + "/" + url;
         }
 
     }

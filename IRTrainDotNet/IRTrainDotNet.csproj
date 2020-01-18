@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <Authors>Keyvan Abdollahzadeh</Authors>
     <Description>Iran Railway-Trains (Raja-Fadak-Safir) all in one package for DotNet (Api-WebService)</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -12,8 +12,8 @@
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/keyone2693/IRTrainDotNet</RepositoryUrl>
     <RepositoryType>Public</RepositoryType>
-    <PackageReleaseNotes>-RestSharp removed And
--Its base on Httpclient now
+    <PackageReleaseNotes>
+-Its base on flurl now
 
 * minor bug fixes</PackageReleaseNotes>
     <PackageTags>Iran,Train,Ticket</PackageTags>
@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Flurl.Http" Version="3.0.0-pre3" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
