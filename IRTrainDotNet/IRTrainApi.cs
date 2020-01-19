@@ -1,18 +1,28 @@
-﻿using Flurl.Http;
-using IRTrainDotNet.Helpers;
+﻿using IRTrainDotNet.Helpers;
 using IRTrainDotNet.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace IRTrainDotNet
 {
     public class IRTrainApi : IIRTrainApi
     {
+        private readonly HttpClient _http;
+        private StringContent _content;
+        private HttpResponseMessage _response;
+
         private string error = "";
 
         #region ctor
+        public IRTrainApi()
+        {
+            _http = new HttpClient();
+        }
         #endregion
 
         #region Synchronous
@@ -21,15 +31,15 @@ namespace IRTrainDotNet
         public ServiceResult<String> Login(LoginModel loginModel, Company company)
         {
             var result = new ServiceResult<string>();
+            _http.DefaultRequestHeaders.Clear();
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(loginModel), UTF8Encoding.UTF8, "application/json");
 
+            _response = _http.PostAsync(company.ToBaseUrl(ApiUrl.Login), _content).Result;
 
-            var response = company.ToBaseUrl(ApiUrl.Login)
-                .WithHeader("Content-Type", "application/json")
-                .PostJsonAsync(loginModel).Result;
-
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<String>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<String>>(_response.Content.ReadAsStringAsync().Result);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
                     result.Status = true;
@@ -43,14 +53,16 @@ namespace IRTrainDotNet
             }
             return result;
         }
-        public bool ValidateTokenWithRequest(string token, Company company)
+        public bool ValidateTokenWithRequest(string authtoken, Company company)
         {
-            var response = company.ToBaseUrl(ApiUrl.GetLastVersion)
-                .WithHeader("Content-Type", "application/json")
-                .WithHeader("Authorization", Constants.PreToken + token)
-                .GetAsync().Result;
 
-            if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authtoken);
+            _response = _http.GetAsync(company.ToBaseUrl(ApiUrl.GetLastVersion)).Result;
+
+            if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 return false;
             }
@@ -59,6 +71,7 @@ namespace IRTrainDotNet
                 return true;
             }
         }
+
         public bool ValidateTokenWithTime(DateTime addDate)
         {
             if (addDate.AddMinutes(20) > DateTime.Now)
@@ -75,15 +88,14 @@ namespace IRTrainDotNet
         public ServiceResult<IEnumerable<Station>> GetStations(string authToken, Company company)
         {
             var result = new ServiceResult<IEnumerable<Station>>();
+            _http.DefaultRequestHeaders.Clear();
 
-            var response = company.ToBaseUrl(ApiUrl.Stations)
-               .WithHeader("Content-Type", "application/json")
-               .WithHeader("Authorization", Constants.PreToken + authToken)
-               .GetAsync().Result;
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _response = _http.GetAsync(company.ToBaseUrl(ApiUrl.Stations)).Result;
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<IEnumerable<Station>>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<IEnumerable<Station>>>(_response.Content.ReadAsStringAsync().Result);
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
@@ -96,7 +108,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -114,17 +126,20 @@ namespace IRTrainDotNet
         public ServiceResult<Station> GetStationById(string authToken, int stationId, Company company)
         {
 
-            var response = company.ToBaseUrl(ApiUrl.Station + "/" + stationId)
-               .WithHeader("Content-Type", "application/json")
-               .WithHeader("Authorization", Constants.PreToken + authToken)
-               .GetAsync().Result;
+
+
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _response = _http.GetAsync(company.ToBaseUrl(ApiUrl.Station + stationId)).Result;
+
 
 
             var result = new ServiceResult<Station>();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<Station>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<Station>>(_response.Content.ReadAsStringAsync().Result);
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
@@ -137,7 +152,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -155,17 +170,18 @@ namespace IRTrainDotNet
         public ServiceResult<string> GetLastVersion(string authToken, Company company)
         {
 
-            var response = company.ToBaseUrl(ApiUrl.GetLastVersion)
-               .WithHeader("Content-Type", "application/json")
-               .WithHeader("Authorization", Constants.PreToken + authToken)
-               .GetAsync().Result;
+
 
             var result = new ServiceResult<string>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _response = _http.GetAsync(company.ToBaseUrl(ApiUrl.GetLastVersion)).Result;
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<string>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<string>>(_response.Content.ReadAsStringAsync().Result);
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
@@ -178,7 +194,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -195,17 +211,22 @@ namespace IRTrainDotNet
         #region Wagon
         public ServiceResult<GetWagonAvailableSeatCountResult> GetWagonAvailableSeatCount(string authToken, GetWagonAvailableSeatCountParams getWagonAvailableSeatCountParams, Company company)
         {
-            var response = company.ToBaseUrl(ApiUrl.GetWagonAvailableSeatCount)
-              .WithHeader("Content-Type", "application/json")
-              .WithHeader("Authorization", Constants.PreToken + authToken)
-              .PostJsonAsync(getWagonAvailableSeatCountParams).Result;
+
 
             var result = new ServiceResult<GetWagonAvailableSeatCountResult>();
 
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(getWagonAvailableSeatCountParams), UTF8Encoding.UTF8, "application/json");
+            _response = _http.PostAsync(company.ToBaseUrl(ApiUrl.GetWagonAvailableSeatCount), _content).Result;
+
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<GetWagonAvailableSeatCountResult>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<GetWagonAvailableSeatCountResult>>(_response.Content.ReadAsStringAsync().Result);
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
@@ -218,7 +239,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -235,16 +256,20 @@ namespace IRTrainDotNet
         #region Seat
         public ServiceResult<LockSeatResult> LockSeat(string authToken, LockSeatParams lockSeatParams, Company company)
         {
-            var response = company.ToBaseUrl(ApiUrl.LockSeat)
-            .WithHeader("Content-Type", "application/json")
-            .WithHeader("Authorization", Constants.PreToken + authToken)
-            .PostJsonAsync(lockSeatParams).Result;
+
 
             var result = new ServiceResult<LockSeatResult>();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(lockSeatParams), UTF8Encoding.UTF8, "application/json");
+            _response = _http.PostAsync(company.ToBaseUrl(ApiUrl.LockSeat), _content).Result;
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<LockSeatResult>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<LockSeatResult>>(_response.Content.ReadAsStringAsync().Result);
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
@@ -257,7 +282,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -273,19 +298,21 @@ namespace IRTrainDotNet
         public ServiceResult<LockSeatBulkResult> LockSeatBulk(string authToken, LockSeatBulkParams lockSeatBulkParams, Company company)
         {
 
-            var response = company.ToBaseUrl(ApiUrl.LockSeatBulk)
-         .WithHeader("Content-Type", "application/json")
-         .WithHeader("Authorization", Constants.PreToken + authToken)
-         .PostJsonAsync(lockSeatBulkParams).Result;
+
 
             var result = new ServiceResult<LockSeatBulkResult>();
 
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(lockSeatBulkParams), UTF8Encoding.UTF8, "application/json");
+            _response = _http.PostAsync(company.ToBaseUrl(ApiUrl.LockSeatBulk), _content).Result;
 
 
-
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<LockSeatBulkResult>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<LockSeatBulkResult>>(_response.Content.ReadAsStringAsync().Result);
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
@@ -298,7 +325,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -313,17 +340,19 @@ namespace IRTrainDotNet
         }
         public ServiceResult<EmptyResult> UnlockSeat(string authToken, UnlockSeatParams unlockSeatParams, Company company)
         {
-            var response = company.ToBaseUrl(ApiUrl.UnlockSeat)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(unlockSeatParams).Result;
+
 
             var result = new ServiceResult<EmptyResult>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(unlockSeatParams), UTF8Encoding.UTF8, "application/json");
+            _response = _http.PostAsync(company.ToBaseUrl(ApiUrl.UnlockSeat), _content).Result;
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<EmptyResult>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<EmptyResult>>(_response.Content.ReadAsStringAsync().Result);
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -337,7 +366,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -354,16 +383,18 @@ namespace IRTrainDotNet
         #region Ticket
         public ServiceResult<int> SaveTicketsInfo(string authToken, SaveTicketsInfoParams saveTicketsInfoParams, Company company)
         {
-            var response = company.ToBaseUrl(ApiUrl.SaveTicketsInfo)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(saveTicketsInfoParams).Result;
-
             var result = new ServiceResult<int>();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(saveTicketsInfoParams), UTF8Encoding.UTF8, "application/json");
+            _response = _http.PostAsync(company.ToBaseUrl(ApiUrl.SaveTicketsInfo), _content).Result;
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<int>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<int>>(_response.Content.ReadAsStringAsync().Result);
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -377,7 +408,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -392,17 +423,18 @@ namespace IRTrainDotNet
         }
         public ServiceResult<EmptyResult> RegisterTickets(string authToken, RegisterTicketParams registerTicketParams, Company company)
         {
-            var response = company.ToBaseUrl(ApiUrl.RegisterTickets)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(registerTicketParams).Result;
-
             var result = new ServiceResult<EmptyResult>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(registerTicketParams), UTF8Encoding.UTF8, "application/json");
+            _response = _http.PostAsync(company.ToBaseUrl(ApiUrl.RegisterTickets), _content).Result;
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<EmptyResult>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<EmptyResult>>(_response.Content.ReadAsStringAsync().Result);
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -416,7 +448,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -431,19 +463,21 @@ namespace IRTrainDotNet
         }
         public ServiceResult<TicketReportAResult> TicketReportA(string authToken, TicketReportAParams ticketReportAParams, Company company)
         {
-            var response = company.ToBaseUrl(ApiUrl.TicketReportA)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(ticketReportAParams).Result;
 
             var result = new ServiceResult<TicketReportAResult>();
 
 
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(ticketReportAParams), UTF8Encoding.UTF8, "application/json");
+            _response = _http.PostAsync(company.ToBaseUrl(ApiUrl.TicketReportA), _content).Result;
 
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<TicketReportAResult>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<TicketReportAResult>>(_response.Content.ReadAsStringAsync().Result);
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -457,7 +491,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -472,17 +506,19 @@ namespace IRTrainDotNet
         }
         public ServiceResult<RefundTicketInfoResult> RefundTicketInfo(string authToken, RefundTicketInfoParams refundTicketInfoParams, Company company)
         {
-            var response = company.ToBaseUrl(ApiUrl.RefundTicketInfo)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(refundTicketInfoParams).Result;
 
             var result = new ServiceResult<RefundTicketInfoResult>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(refundTicketInfoParams), UTF8Encoding.UTF8, "application/json");
+            _response = _http.PostAsync(company.ToBaseUrl(ApiUrl.RefundTicketInfo), _content).Result;
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<RefundTicketInfoResult>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<RefundTicketInfoResult>>(_response.Content.ReadAsStringAsync().Result);
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -496,7 +532,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -511,17 +547,19 @@ namespace IRTrainDotNet
         }
         public ServiceResult<int> RefundTicket(string authToken, RefundTicketParams refundTicketParams, Company company)
         {
-            var response = company.ToBaseUrl(ApiUrl.RefundTicket)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(refundTicketParams).Result;
 
             var result = new ServiceResult<int>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(refundTicketParams), UTF8Encoding.UTF8, "application/json");
+            _response = _http.PostAsync(company.ToBaseUrl(ApiUrl.RefundTicket), _content).Result;
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<int>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<int>>(_response.Content.ReadAsStringAsync().Result);
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -535,7 +573,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -553,17 +591,18 @@ namespace IRTrainDotNet
         #region Agent
         public ServiceResult<IEnumerable<UserSaleMetadata>> UserSales(string authToken, Company company)
         {
-            var response = company.ToBaseUrl(ApiUrl.UserSales)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(authToken).Result;
 
             var result = new ServiceResult<IEnumerable<UserSaleMetadata>>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+
+            _response = _http.GetAsync(company.ToBaseUrl(ApiUrl.UserSales)).Result;
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<IEnumerable<UserSaleMetadata>>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<IEnumerable<UserSaleMetadata>>>(_response.Content.ReadAsStringAsync().Result);
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -577,7 +616,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -593,17 +632,17 @@ namespace IRTrainDotNet
         public ServiceResult<long> AgentCredit(string authToken, Company company)
         {
 
-            var response = company.ToBaseUrl(ApiUrl.AgentCredit)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.GetAsync().Result;
 
             var result = new ServiceResult<long>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _response = _http.GetAsync(company.ToBaseUrl(ApiUrl.AgentCredit)).Result;
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = response.GetJsonAsync<IrTrainResult<long>>().Result;
+                var res = JsonConvert.DeserializeObject<IrTrainResult<long>>(_response.Content.ReadAsStringAsync().Result);
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -617,7 +656,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -631,7 +670,6 @@ namespace IRTrainDotNet
             return result;
         }
         #endregion
-
         //-------------------------------------------
         #endregion
 
@@ -641,15 +679,18 @@ namespace IRTrainDotNet
         public async Task<ServiceResult<String>> LoginAsync(LoginModel loginModel, Company company)
         {
             var result = new ServiceResult<string>();
+            _http.DefaultRequestHeaders.Clear();
 
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(loginModel), UTF8Encoding.UTF8, "application/json");
 
-            var response = await company.ToBaseUrl(ApiUrl.Login)
-                .WithHeader("Content-Type", "application/json")
-                .PostJsonAsync(loginModel);
-
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _response = await _http.PostAsync(company.ToBaseUrl(ApiUrl.Login), _content);
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<String>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<String>>(await _response.Content.ReadAsStringAsync());
+                error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
+
+
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
                     result.Status = true;
@@ -661,16 +702,19 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
+
             return result;
         }
-        public async Task<bool> ValidateTokenWithRequestAsync(string token, Company company)
+        public async Task<bool> ValidateTokenWithRequestAsync(string authtoken, Company company)
         {
-            var response = await company.ToBaseUrl(ApiUrl.GetLastVersion)
-                .WithHeader("Content-Type", "application/json")
-                .WithHeader("Authorization", Constants.PreToken + token)
-                .GetAsync();
 
-            if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authtoken);
+            _response = await _http.GetAsync(company.ToBaseUrl(ApiUrl.GetLastVersion));
+
+            if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 return false;
             }
@@ -684,15 +728,14 @@ namespace IRTrainDotNet
         public async Task<ServiceResult<IEnumerable<Station>>> GetStationsAsync(string authToken, Company company)
         {
             var result = new ServiceResult<IEnumerable<Station>>();
+            _http.DefaultRequestHeaders.Clear();
 
-            var response = await company.ToBaseUrl(ApiUrl.Stations)
-               .WithHeader("Content-Type", "application/json")
-               .WithHeader("Authorization", Constants.PreToken + authToken)
-               .GetAsync();
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _response = await _http.GetAsync(company.ToBaseUrl(ApiUrl.Stations));
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<IEnumerable<Station>>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<IEnumerable<Station>>>(await _response.Content.ReadAsStringAsync());
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
@@ -705,7 +748,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -723,17 +766,20 @@ namespace IRTrainDotNet
         public async Task<ServiceResult<Station>> GetStationByIdAsync(string authToken, int stationId, Company company)
         {
 
-            var response = await company.ToBaseUrl(ApiUrl.Station + "/" + stationId)
-               .WithHeader("Content-Type", "application/json")
-               .WithHeader("Authorization", Constants.PreToken + authToken)
-               .GetAsync();
+
+
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _response = await _http.GetAsync(company.ToBaseUrl(ApiUrl.Station + stationId));
+
 
 
             var result = new ServiceResult<Station>();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<Station>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<Station>>(await _response.Content.ReadAsStringAsync());
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
@@ -746,7 +792,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -764,17 +810,18 @@ namespace IRTrainDotNet
         public async Task<ServiceResult<string>> GetLastVersionAsync(string authToken, Company company)
         {
 
-            var response = await company.ToBaseUrl(ApiUrl.GetLastVersion)
-               .WithHeader("Content-Type", "application/json")
-               .WithHeader("Authorization", Constants.PreToken + authToken)
-               .GetAsync();
+
 
             var result = new ServiceResult<string>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _response = await _http.GetAsync(company.ToBaseUrl(ApiUrl.GetLastVersion));
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<string>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<string>>(await _response.Content.ReadAsStringAsync());
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
@@ -787,7 +834,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -804,17 +851,22 @@ namespace IRTrainDotNet
         #region Wagon
         public async Task<ServiceResult<GetWagonAvailableSeatCountResult>> GetWagonAvailableSeatCountAsync(string authToken, GetWagonAvailableSeatCountParams getWagonAvailableSeatCountParams, Company company)
         {
-            var response = await company.ToBaseUrl(ApiUrl.GetWagonAvailableSeatCount)
-              .WithHeader("Content-Type", "application/json")
-              .WithHeader("Authorization", Constants.PreToken + authToken)
-              .PostJsonAsync(getWagonAvailableSeatCountParams);
+
 
             var result = new ServiceResult<GetWagonAvailableSeatCountResult>();
 
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(getWagonAvailableSeatCountParams), UTF8Encoding.UTF8, "application/json");
+            _response = await _http.PostAsync(company.ToBaseUrl(ApiUrl.GetWagonAvailableSeatCount), _content);
+
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<GetWagonAvailableSeatCountResult>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<GetWagonAvailableSeatCountResult>>(await _response.Content.ReadAsStringAsync());
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
@@ -827,7 +879,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -844,16 +896,20 @@ namespace IRTrainDotNet
         #region Seat
         public async Task<ServiceResult<LockSeatResult>> LockSeatAsync(string authToken, LockSeatParams lockSeatParams, Company company)
         {
-            var response = await company.ToBaseUrl(ApiUrl.LockSeat)
-            .WithHeader("Content-Type", "application/json")
-            .WithHeader("Authorization", Constants.PreToken + authToken)
-            .PostJsonAsync(lockSeatParams);
+
 
             var result = new ServiceResult<LockSeatResult>();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(lockSeatParams), UTF8Encoding.UTF8, "application/json");
+            _response = await _http.PostAsync(company.ToBaseUrl(ApiUrl.LockSeat), _content);
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<LockSeatResult>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<LockSeatResult>>(await _response.Content.ReadAsStringAsync());
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
@@ -866,7 +922,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -882,19 +938,22 @@ namespace IRTrainDotNet
         public async Task<ServiceResult<LockSeatBulkResult>> LockSeatBulkAsync(string authToken, LockSeatBulkParams lockSeatBulkParams, Company company)
         {
 
-            var response = await company.ToBaseUrl(ApiUrl.LockSeatBulk)
-         .WithHeader("Content-Type", "application/json")
-         .WithHeader("Authorization", Constants.PreToken + authToken)
-         .PostJsonAsync(lockSeatBulkParams);
+
 
             var result = new ServiceResult<LockSeatBulkResult>();
 
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(lockSeatBulkParams), UTF8Encoding.UTF8, "application/json");
+
+            _response = await _http.PostAsync(company.ToBaseUrl(ApiUrl.LockSeatBulk), _content);
 
 
-
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<LockSeatBulkResult>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<LockSeatBulkResult>>(await _response.Content.ReadAsStringAsync());
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
                 {
@@ -907,7 +966,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -922,17 +981,20 @@ namespace IRTrainDotNet
         }
         public async Task<ServiceResult<EmptyResult>> UnlockSeatAsync(string authToken, UnlockSeatParams unlockSeatParams, Company company)
         {
-            var response = await company.ToBaseUrl(ApiUrl.UnlockSeat)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(unlockSeatParams);
+
 
             var result = new ServiceResult<EmptyResult>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(unlockSeatParams), UTF8Encoding.UTF8, "application/json");
+
+            _response = await _http.PostAsync(company.ToBaseUrl(ApiUrl.UnlockSeat), _content);
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<EmptyResult>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<EmptyResult>>(await _response.Content.ReadAsStringAsync());
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -946,7 +1008,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -963,16 +1025,19 @@ namespace IRTrainDotNet
         #region Ticket
         public async Task<ServiceResult<int>> SaveTicketsInfoAsync(string authToken, SaveTicketsInfoParams saveTicketsInfoParams, Company company)
         {
-            var response = await company.ToBaseUrl(ApiUrl.SaveTicketsInfo)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(saveTicketsInfoParams);
-
             var result = new ServiceResult<int>();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(saveTicketsInfoParams), UTF8Encoding.UTF8, "application/json");
+
+            _response = await _http.PostAsync(company.ToBaseUrl(ApiUrl.SaveTicketsInfo), _content);
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<int>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<int>>(await _response.Content.ReadAsStringAsync());
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -986,7 +1051,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -1001,17 +1066,19 @@ namespace IRTrainDotNet
         }
         public async Task<ServiceResult<EmptyResult>> RegisterTicketsAsync(string authToken, RegisterTicketParams registerTicketParams, Company company)
         {
-            var response = await company.ToBaseUrl(ApiUrl.RegisterTickets)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(registerTicketParams);
-
             var result = new ServiceResult<EmptyResult>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(registerTicketParams), UTF8Encoding.UTF8, "application/json");
+
+            _response = await _http.PostAsync(company.ToBaseUrl(ApiUrl.RegisterTickets), _content);
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<EmptyResult>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<EmptyResult>>(await _response.Content.ReadAsStringAsync());
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -1025,7 +1092,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -1040,19 +1107,22 @@ namespace IRTrainDotNet
         }
         public async Task<ServiceResult<TicketReportAResult>> TicketReportAAsync(string authToken, TicketReportAParams ticketReportAParams, Company company)
         {
-            var response = await company.ToBaseUrl(ApiUrl.TicketReportA)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(ticketReportAParams);
 
             var result = new ServiceResult<TicketReportAResult>();
 
 
+            _http.DefaultRequestHeaders.Clear();
+
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(ticketReportAParams), UTF8Encoding.UTF8, "application/json");
+
+            _response = await _http.PostAsync(company.ToBaseUrl(ApiUrl.TicketReportA), _content);
 
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<TicketReportAResult>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<TicketReportAResult>>(await _response.Content.ReadAsStringAsync());
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -1066,7 +1136,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -1081,17 +1151,19 @@ namespace IRTrainDotNet
         }
         public async Task<ServiceResult<RefundTicketInfoResult>> RefundTicketInfoAsync(string authToken, RefundTicketInfoParams refundTicketInfoParams, Company company)
         {
-            var response = await company.ToBaseUrl(ApiUrl.RefundTicketInfo)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(refundTicketInfoParams);
 
             var result = new ServiceResult<RefundTicketInfoResult>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(refundTicketInfoParams), UTF8Encoding.UTF8, "application/json");
+            _response = await _http.PostAsync(company.ToBaseUrl(ApiUrl.RefundTicketInfo), _content);
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<RefundTicketInfoResult>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<RefundTicketInfoResult>>(await _response.Content.ReadAsStringAsync());
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -1105,7 +1177,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -1120,17 +1192,19 @@ namespace IRTrainDotNet
         }
         public async Task<ServiceResult<int>> RefundTicketAsync(string authToken, RefundTicketParams refundTicketParams, Company company)
         {
-            var response = await company.ToBaseUrl(ApiUrl.RefundTicket)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(refundTicketParams);
 
             var result = new ServiceResult<int>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _content = new StringContent(
+                       JsonConvert.SerializeObject(refundTicketParams), UTF8Encoding.UTF8, "application/json");
+            _response = await _http.PostAsync(company.ToBaseUrl(ApiUrl.RefundTicket), _content);
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<int>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<int>>(await _response.Content.ReadAsStringAsync());
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -1144,7 +1218,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -1162,17 +1236,17 @@ namespace IRTrainDotNet
         #region Agent
         public async Task<ServiceResult<IEnumerable<UserSaleMetadata>>> UserSalesAsync(string authToken, Company company)
         {
-            var response = await company.ToBaseUrl(ApiUrl.UserSales)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.PostJsonAsync(authToken);
 
             var result = new ServiceResult<IEnumerable<UserSaleMetadata>>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _response = await _http.GetAsync(company.ToBaseUrl(ApiUrl.UserSales));
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<IEnumerable<UserSaleMetadata>>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<IEnumerable<UserSaleMetadata>>>(await _response.Content.ReadAsStringAsync());
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -1186,7 +1260,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -1202,17 +1276,17 @@ namespace IRTrainDotNet
         public async Task<ServiceResult<long>> AgentCreditAsync(string authToken, Company company)
         {
 
-            var response = await company.ToBaseUrl(ApiUrl.AgentCredit)
-.WithHeader("Content-Type", "application/json")
-.WithHeader("Authorization", Constants.PreToken + authToken)
-.GetAsync();
 
             var result = new ServiceResult<long>();
 
+            _http.DefaultRequestHeaders.Clear();
 
-            if (response.StatusCode == (int)HttpStatusCode.OK)
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+            _response = await _http.GetAsync(company.ToBaseUrl(ApiUrl.AgentCredit));
+
+            if (_response.IsSuccessStatusCode)
             {
-                var res = await response.GetJsonAsync<IrTrainResult<long>>();
+                var res = JsonConvert.DeserializeObject<IrTrainResult<long>>(await _response.Content.ReadAsStringAsync());
 
                 error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
                 if (res.ExceptionId == 0 && res.ExceptionMessage == null)
@@ -1226,7 +1300,7 @@ namespace IRTrainDotNet
                     result.Message = error;
                 }
             }
-            else if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 result.Status = false;
                 result.Unauthorized = true;
@@ -1241,6 +1315,35 @@ namespace IRTrainDotNet
         }
         #endregion
         //-------------------------------------------
+        #endregion
+
+
+        #region dispose
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    _http.Dispose();
+                    _content.Dispose();
+                    _response.Dispose();
+                }
+            }
+            disposed = true;
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~IRTrainApi()
+        {
+            Dispose(true);
+        }
         #endregion
     }
 }

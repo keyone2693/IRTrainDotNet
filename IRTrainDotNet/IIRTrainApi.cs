@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IRTrainDotNet
 {
-    public interface IIRTrainApi
+    public interface IIRTrainApi : IDisposable
     {
         #region Synchronous
         //-------------------------------------------

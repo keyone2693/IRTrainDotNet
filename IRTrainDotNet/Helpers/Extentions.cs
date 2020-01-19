@@ -123,10 +123,10 @@ namespace IRTrainDotNet.Helpers
 
         public static string ToBaseUrl(this Company company, string url = "")
         {
-            return company == Company.Raja ?
+            return (company == Company.Raja ?
                 ApiUrl.RajaBaseUrl :
                 company == Company.Fadak ?
-                ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl + "/" + url;
+ApiUrl.FadakBaseUrl : ApiUrl.SafirBaseUrl) + url;
         }
 
     }
