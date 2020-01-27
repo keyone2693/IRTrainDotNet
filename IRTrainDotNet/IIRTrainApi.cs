@@ -1,12 +1,13 @@
 ﻿using IRTrainDotNet.Helpers;
 using IRTrainDotNet.Models;
+using IRTrainDotNet.Models.StationTrainInfo;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace IRTrainDotNet
 {
-    public interface IIRTrainApi : IDisposable
+    public interface IIRTrainApi
     {
         #region Synchronous
         //-------------------------------------------
@@ -36,6 +37,9 @@ namespace IRTrainDotNet
         ServiceResult<TicketReportAResult> TicketReportA(string authToken, TicketReportAParams ticketReportAParams, Company company);
         ServiceResult<RefundTicketInfoResult> RefundTicketInfo(string authToken, RefundTicketInfoParams refundTicketInfoParams, Company company);
         ServiceResult<int> RefundTicket(string authToken, RefundTicketParams refundTicketParams, Company company);
+        #endregion
+        #region StationTrainInfo
+        ServiceResult<IEnumerable<StationTimeLine>> GetStationTimeLine(string authToken, GetStationTimeLineParams getStationTimeLineParams, Company company);
         #endregion
         #region Agent
         ServiceResult<IEnumerable<UserSaleMetadata>> UserSales(string authToken, Company company);
@@ -71,6 +75,11 @@ namespace IRTrainDotNet
         Task<ServiceResult<TicketReportAResult>> TicketReportAAsync(string authToken, TicketReportAParams ticketReportAParams, Company company);
         Task<ServiceResult<RefundTicketInfoResult>> RefundTicketInfoAsync(string authToken, RefundTicketInfoParams refundTicketInfoParams, Company company);
         Task<ServiceResult<int>> RefundTicketAsync(string authToken, RefundTicketParams refundTicketParams, Company company);
+
+        #endregion
+
+        #region StationTrainInfo
+        Task<ServiceResult<IEnumerable<StationTimeLine>>> GetStationTimeLineAsync(string authToken, GetStationTimeLineParams getStationTimeLineParams, Company company);
 
         #endregion
         #region Agent

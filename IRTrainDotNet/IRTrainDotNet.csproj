@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <Version>2.2.0</Version>
+    <Version>2.2.41</Version>
     <Authors>Keyvan Abdollahzadeh</Authors>
     <Description>Iran Railway-Trains (Raja-Fadak-Safir) all in one package for DotNet (Api-WebService)</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -13,15 +13,13 @@
     <RepositoryUrl>https://github.com/keyone2693/IRTrainDotNet</RepositoryUrl>
     <RepositoryType>Public</RepositoryType>
     <PackageReleaseNotes>
--Its base on HttpClient now after flurl and reshtsharp !
-
-* minor bug fixes</PackageReleaseNotes>
+minor bug fixes !!!</PackageReleaseNotes>
     <PackageTags>Iran,Train,Ticket</PackageTags>
     <NeutralLanguage></NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\Files\IrTrain.jpg">
+    <None Include="..\..\..\Files\IrTrain.jpg">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

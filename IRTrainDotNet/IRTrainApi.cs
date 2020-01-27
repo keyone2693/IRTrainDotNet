@@ -1,5 +1,6 @@
 ﻿using IRTrainDotNet.Helpers;
 using IRTrainDotNet.Models;
+using IRTrainDotNet.Models.StationTrainInfo;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace IRTrainDotNet
 {
-    public class IRTrainApi : IIRTrainApi
+    public class IRTrainApi : IIRTrainApi, IDisposable
     {
         private readonly HttpClient _http;
         private StringContent _content;
@@ -584,6 +585,56 @@ namespace IRTrainDotNet
                 result.Status = false;
                 result.Message = error;
             }
+            return result;
+        }
+
+        #endregion
+        #region StationTrainInfo
+        public ServiceResult<IEnumerable<StationTimeLine>> GetStationTimeLine(string authToken, GetStationTimeLineParams getStationTimeLineParams, Company company)
+        {
+            var result = new ServiceResult<IEnumerable<StationTimeLine>>();
+            _http.DefaultRequestHeaders.Clear();
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+
+            _content = new StringContent(
+           JsonConvert.SerializeObject(getStationTimeLineParams), UTF8Encoding.UTF8, "application/json");
+
+            _response = _http.PostAsync(company.ToBaseUrl(ApiUrl.StationTimeLine), _content).Result;
+
+            if (_response.IsSuccessStatusCode)
+            {
+                var res = JsonConvert.DeserializeObject<IrTrainResult<IEnumerable<StationTimeLine>>>(_response.Content.ReadAsStringAsync().Result);
+                error = res.ExceptionId.GetSystemErrorMessage(res.ExceptionMessage);
+                if (res.ExceptionId == 0 && res.ExceptionMessage == null)
+                {
+                    short ind = 1;
+                    foreach (var item in res.Result)
+                    {
+                        item.Index = 1;
+                        ind++;
+                    }
+                    result.Status = true;
+                    result.Result = res.Result;
+                }
+                else
+                {
+                    result.Status = false;
+                    result.Message = error;
+                }
+            }
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                result.Status = false;
+                result.Unauthorized = true;
+                result.Message = "مشکل در اعتبار سنجی دوباره لاگین کنید";
+            }
+            else
+            {
+                result.Status = false;
+                result.Message = error;
+            }
+
+
             return result;
         }
 
@@ -1233,6 +1284,56 @@ namespace IRTrainDotNet
         }
 
         #endregion
+        #region StationTrainInfo
+        public async Task<ServiceResult<IEnumerable<StationTimeLine>>> GetStationTimeLineAsync(string authToken, GetStationTimeLineParams getStationTimeLineParams, Company company)
+        {
+            var result = new ServiceResult<IEnumerable<StationTimeLine>>();
+            _http.DefaultRequestHeaders.Clear();
+            _http.DefaultRequestHeaders.Add("Authorization", Constants.PreToken + authToken);
+
+            _content = new StringContent(
+           JsonConvert.SerializeObject(getStationTimeLineParams), UTF8Encoding.UTF8, "application/json");
+
+            _response = await _http.PostAsync(company.ToBaseUrl(ApiUrl.StationTimeLine), _content);
+
+            if (_response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    var res = JsonConvert.DeserializeObject<IEnumerable<StationTimeLine>>(await _response.Content.ReadAsStringAsync());
+                    short ind = 1;
+                    foreach (var item in res)
+                    {
+                        item.Index = 1;
+                        ind++;
+                    }
+                    result.Status = true;
+                    result.Result = res;
+                }
+                catch (Exception ex)
+                {
+
+                    result.Status = false;
+                    result.Message = ex.Message;
+                }
+            }
+            else if (_response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                result.Status = false;
+                result.Unauthorized = true;
+                result.Message = "مشکل در اعتبار سنجی دوباره لاگین کنید";
+            }
+            else
+            {
+                result.Status = false;
+                result.Message = error;
+            }
+
+
+            return result;
+        }
+
+        #endregion
         #region Agent
         public async Task<ServiceResult<IEnumerable<UserSaleMetadata>>> UserSalesAsync(string authToken, Company company)
         {
@@ -1317,10 +1418,8 @@ namespace IRTrainDotNet
         //-------------------------------------------
         #endregion
 
-
         #region dispose
         private bool disposed = false;
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposed)
@@ -1328,8 +1427,10 @@ namespace IRTrainDotNet
                 if (disposing)
                 {
                     _http.Dispose();
-                    _content.Dispose();
-                    _response.Dispose();
+                    if (_content != null)
+                        _content.Dispose();
+                    if (_response != null)
+                        _response.Dispose();
                 }
             }
             disposed = true;

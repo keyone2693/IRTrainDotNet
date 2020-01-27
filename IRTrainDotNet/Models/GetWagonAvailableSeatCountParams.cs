@@ -7,8 +7,8 @@ namespace IRTrainDotNet.Models
         public int FromStation { get; set; }
         public int ToStation { get; set; }
         public DateTime GoingDate { get; set; }
-        public DateTime ReturnDate { get; set; }
-        public int Gender;
+        public DateTime? ReturnDate { get; set; }
+        public int Gender { get; set; }
         public bool ExclusiveCompartment { get; set; }
         public int AdultsCount { get; set; }
         public int ChildrenCount { get; set; }
