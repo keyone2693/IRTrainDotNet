@@ -5,7 +5,7 @@
 	<LangVersion>8.0</LangVersion>
     <ApplicationIcon>icon.ico</ApplicationIcon>
 	<NullableReferenceTypes>true</NullableReferenceTypes>
-    <Version>2.2.42</Version>
+    <Version>2.3.1</Version>
     <Authors>Keyvan Abdollahzadeh</Authors>
     <Description>Iran Railway-Trains (Raja-Fadak-Safir) all in one package for DotNet (Api-WebService)</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
