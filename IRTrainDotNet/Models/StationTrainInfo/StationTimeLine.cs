@@ -8,16 +8,16 @@ namespace IRTrainDotNet.Models.StationTrainInfo
     {
         public short StationStatus { get; set; } = 0;
         public int Index { get; set; } = 0;
-        public string TimeStop { get; set; } = "";
+        public string? TimeStop { get; set; }
         public int StationCode { get; set; }
         public string StationName { get; set; }
         public string EnterTime { get; set; }
         public string EnterTimeF { get; set; }
-        public DateTime ExitTime { get; set; }
-        public DateTime DayAfter { get; set; }
-        public string Row { get; set; } = "";
-        public string ExitTimeProgram { get; set; } = "";
-        public string Width { get; set; } = "";
+        public DateTime? ExitTime { get; set; }
+        public DateTime? DayAfter { get; set; }
+        public string? Row { get; set; }
+        public string? ExitTimeProgram { get; set; }
+        public string? Width { get; set; }
     }
 
 }
