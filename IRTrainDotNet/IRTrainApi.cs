@@ -637,7 +637,6 @@ namespace IRTrainDotNet
 
             return result;
         }
-
         #endregion
         #region Agent
         public ServiceResult<IEnumerable<UserSaleMetadata>> UserSales(string authToken, Company company)
@@ -1332,7 +1331,6 @@ namespace IRTrainDotNet
 
             return result;
         }
-
         #endregion
         #region Agent
         public async Task<ServiceResult<IEnumerable<UserSaleMetadata>>> UserSalesAsync(string authToken, Company company)
@@ -1417,7 +1415,6 @@ namespace IRTrainDotNet
         #endregion
         //-------------------------------------------
         #endregion
-
         #region dispose
         private bool disposed = false;
         protected virtual void Dispose(bool disposing)
