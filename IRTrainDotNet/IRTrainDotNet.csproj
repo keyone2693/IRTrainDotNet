@@ -5,7 +5,7 @@
 	<LangVersion>8.0</LangVersion>
     <ApplicationIcon>icon.ico</ApplicationIcon>
 	<NullableReferenceTypes>true</NullableReferenceTypes>
-    <Version>2.3.1</Version>
+    <Version>2.5.0</Version>
     <Authors>Keyvan Abdollahzadeh</Authors>
     <Description>Iran Railway-Trains (Raja-Fadak-Safir) all in one package for DotNet (Api-WebService)</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -14,8 +14,7 @@
     <PackageIconUrl />
     <RepositoryUrl>https://github.com/keyone2693/IRTrainDotNet</RepositoryUrl>
     <RepositoryType>Public</RepositoryType>
-    <PackageReleaseNotes>
-minor bug fixes !!!</PackageReleaseNotes>
+    <PackageReleaseNotes>change return dates to UTC</PackageReleaseNotes>
     <PackageTags>Iran,Train,Ticket</PackageTags>
   </PropertyGroup>
 

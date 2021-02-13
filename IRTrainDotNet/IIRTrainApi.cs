@@ -9,45 +9,6 @@ namespace IRTrainDotNet
 {
     public interface IIRTrainApi
     {
-        #region Synchronous
-        //-------------------------------------------
-        #region Auth
-        ServiceResult<string> Login(LoginModel loginModel, Company company);
-        bool ValidateTokenWithTime(DateTime addDate);
-        bool ValidateTokenWithRequest(string token, Company company);
-        #endregion
-        #region Stations
-        ServiceResult<IEnumerable<Station>> GetStations(string authToken, Company company);
-        ServiceResult<Station> GetStationById(string authToken, int stationId, Company company);
-        #endregion
-        #region Raja
-        ServiceResult<string> GetLastVersion(string authToken, Company company);
-        #endregion
-        #region Wagon
-        ServiceResult<GetWagonAvailableSeatCountResult> GetWagonAvailableSeatCount(string authToken, GetWagonAvailableSeatCountParams getWagonAvailableSeatCountParams, Company company);
-        #endregion
-        #region Seat
-        ServiceResult<LockSeatResult> LockSeat(string authToken, LockSeatParams lockSeatParams, Company company);
-        ServiceResult<LockSeatBulkResult> LockSeatBulk(string authToken, LockSeatBulkParams lockSeatBulkParams, Company company);
-        ServiceResult<EmptyResult> UnlockSeat(string authToken, UnlockSeatParams unlockSeatParams, Company company);
-        #endregion
-        #region Ticket
-        ServiceResult<int> SaveTicketsInfo(string authToken, SaveTicketsInfoParams saveTicketsInfoParams, Company company);
-        ServiceResult<EmptyResult> RegisterTickets(string authToken, RegisterTicketParams registerTicketParams, Company company);
-        ServiceResult<TicketReportAResult> TicketReportA(string authToken, TicketReportAParams ticketReportAParams, Company company);
-        ServiceResult<RefundTicketInfoResult> RefundTicketInfo(string authToken, RefundTicketInfoParams refundTicketInfoParams, Company company);
-        ServiceResult<int> RefundTicket(string authToken, RefundTicketParams refundTicketParams, Company company);
-        #endregion
-        #region StationTrainInfo
-        ServiceResult<IEnumerable<StationTimeLine>> GetStationTimeLine(string authToken, GetStationTimeLineParams getStationTimeLineParams, Company company);
-        #endregion
-        #region Agent
-        ServiceResult<IEnumerable<UserSaleMetadata>> UserSales(string authToken, Company company);
-        ServiceResult<long> AgentCredit(string authToken, Company company);
-        #endregion
-        //-------------------------------------------
-        #endregion
-
         #region Asynchronous 
         //-------------------------------------------
         #region Auth
@@ -72,7 +33,7 @@ namespace IRTrainDotNet
         #region Ticket
         Task<ServiceResult<int>> SaveTicketsInfoAsync(string authToken, SaveTicketsInfoParams saveTicketsInfoParams, Company company);
         Task<ServiceResult<EmptyResult>> RegisterTicketsAsync(string authToken, RegisterTicketParams registerTicketParams, Company company);
-        Task<ServiceResult<TicketReportAResult>> TicketReportAAsync(string authToken, TicketReportAParams ticketReportAParams, Company company);
+        Task<ServiceResult<IEnumerable<TicketReportAResult>>> TicketReportAAsync(string authToken, TicketReportAParams ticketReportAParams, Company company);
         Task<ServiceResult<RefundTicketInfoResult>> RefundTicketInfoAsync(string authToken, RefundTicketInfoParams refundTicketInfoParams, Company company);
         Task<ServiceResult<int>> RefundTicketAsync(string authToken, RefundTicketParams refundTicketParams, Company company);
 

@@ -6,7 +6,13 @@ namespace IRTrainDotNet.Models
     {
         public int FromStation { get; set; }
         public int ToStation { get; set; }
+        /// <summary>
+        /// IT SHOULD BE LOCAL TIME IRAN
+        /// </summary>
         public DateTime GoingDate { get; set; }
+        /// <summary>
+        /// IT SHOULD BE LOCAL TIME IRAN
+        /// </summary>
         public DateTime? ReturnDate { get; set; }
         public int Gender { get; set; }
         public bool ExclusiveCompartment { get; set; }

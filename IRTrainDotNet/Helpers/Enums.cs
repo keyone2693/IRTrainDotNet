@@ -26,6 +26,7 @@ namespace IRTrainDotNet.Helpers
     }
     public enum Company
     {
+        All = 0,
         Raja = 1,
         Fadak = 2, 
         Safir = 3,
@@ -34,8 +35,7 @@ namespace IRTrainDotNet.Helpers
         Joopar = 6,
         TarabarSaba = 7,
         ParsLarim = 8,
-        Mahtab = 9,
-        Home = 9,
+        Mahtab = 9
     }
     public enum WagonType
     {
