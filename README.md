@@ -61,7 +61,7 @@ You can use these methods both Async and nonAsync :)
 - UserSales
 - AgentCredit
 ***
-# Wiki In Persian (Sorry other languages 😁)
+# Wiki In Persian
 
 [Download Persian Documentation](https://github.com/keyone2693/IRTrainDotNet/blob/master/Docs/Documentation-v1.9.3.pdf)
 
